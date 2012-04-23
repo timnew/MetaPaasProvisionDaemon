@@ -7,3 +7,4 @@ TestResults
 
 #nuget packages
 /packages/
+*.suo

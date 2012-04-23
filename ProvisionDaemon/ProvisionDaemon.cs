@@ -37,7 +37,7 @@ namespace ProvisionDaemon
         private void Reboot()
         {
             logger.Info("Reboot");
-            
+
             try
             {
                 var os = WinOperatingSystem.CreateInstance();
@@ -55,7 +55,7 @@ namespace ProvisionDaemon
             {
                 logger.ErrorException("OperatingSystem.Reboot threw exception", ex);
             }
-            
+
         }
 
         private string desiredComputerName;
@@ -86,7 +86,9 @@ namespace ProvisionDaemon
                     var ipAddress = addresses.First(); // TODO Use a better and reasonable algorithm
                     logger.Info("Use Ip: {0}", ipAddress);
 
-                    desiredComputerName = ipAddress.ToString().Replace(".", "-");
+                    desiredComputerName = 
+                        Properties.Settings.Default.ComputerNamePrefix +
+                        ipAddress.ToString().Replace(".", Properties.Settings.Default.ComputerNameSeperator);
                     logger.Debug("Desired Computer Name: {0}", desiredComputerName);
                 }
 
