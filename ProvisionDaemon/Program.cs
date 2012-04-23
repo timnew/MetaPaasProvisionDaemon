@@ -3,18 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using NLog;
 
 namespace ProvisionDaemon
 {
     static class Program
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+        
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         static int Main(string[] args)
         {
+            logger.Info("Launch from CLI");
+
             if (args.Length > 0)
             {
+                logger.Info("Arguments: {0}", args[0]);
                 try
                 {
                     switch (args[0].ToLowerInvariant())
@@ -29,8 +35,9 @@ namespace ProvisionDaemon
                     }
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    logger.FatalException("Launch Error.", ex);
                     return -1;
                 }
             }
@@ -40,6 +47,8 @@ namespace ProvisionDaemon
 
         private static int LaunchService()
         {
+            logger.Info("Launch Service From CLI");
+
             try
             {
                 var ServicesToRun = new ServiceBase[] 
@@ -59,8 +68,9 @@ namespace ProvisionDaemon
 
         private static int Uninstall()
         {
-            var stateSaver = new System.Collections.Hashtable();
+            logger.Info("Uninstalling...");
 
+            var stateSaver = new System.Collections.Hashtable();
             var installer = new ProvisionDaemonInstaller();
 
             try
@@ -69,21 +79,23 @@ namespace ProvisionDaemon
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-
+                logger.FatalException("Uninstall Failed", ex);
+                logger.Info("Rolling Back...");
                 installer.Rollback(stateSaver);
 
                 return -1;
             }
 
+            logger.Info("Commiting...");
             installer.Commit(stateSaver);
             return 0;
         }
 
         private static int Install()
         {
+            logger.Info("Installing...");
+            
             var stateSaver = new System.Collections.Hashtable();
-
             var installer = new ProvisionDaemonInstaller();
 
             try
@@ -92,11 +104,13 @@ namespace ProvisionDaemon
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                logger.FatalException("Install Failed", ex);
+                logger.Info("Rolling Back...");
                 installer.Rollback(stateSaver);
                 return -1;
             }
 
+            logger.Info("Commiting...");
             installer.Commit(stateSaver);
             return 0;
         }
