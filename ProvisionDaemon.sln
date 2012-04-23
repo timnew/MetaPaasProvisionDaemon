@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProvisionDaemon", "ProvisionDaemon\ProvisionDaemon.csproj", "{BCFBAD29-890B-4E94-91F4-32F2B5EF4DF2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BCFBAD29-890B-4E94-91F4-32F2B5EF4DF2}.Debug|x86.ActiveCfg = Debug|x86
+		{BCFBAD29-890B-4E94-91F4-32F2B5EF4DF2}.Debug|x86.Build.0 = Debug|x86
+		{BCFBAD29-890B-4E94-91F4-32F2B5EF4DF2}.Release|x86.ActiveCfg = Release|x86
+		{BCFBAD29-890B-4E94-91F4-32F2B5EF4DF2}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
