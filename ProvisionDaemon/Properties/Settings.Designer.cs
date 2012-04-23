@@ -40,5 +40,25 @@ namespace ProvisionDaemon.Properties {
                 return ((string)(this["ComputerNameSeperator"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime LastReboot {
+            get {
+                return ((global::System.DateTime)(this["LastReboot"]));
+            }
+            set {
+                this["LastReboot"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:30:00")]
+        public global::System.TimeSpan MinRebootInterval {
+            get {
+                return ((global::System.TimeSpan)(this["MinRebootInterval"]));
+            }
+        }
     }
 }

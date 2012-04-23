@@ -34,12 +34,35 @@ namespace ProvisionDaemon
             this.Stop();
         }
 
+        private bool CheckRebootInterval()
+        {
+            var now = DateTime.Now;
+            var lastReboot = Properties.Settings.Default.LastReboot;
+            var timespan = now - lastReboot;
+            var minInterval = Properties.Settings.Default.MinRebootInterval;
+            var canReboot = timespan >= minInterval;
+            logger.Info("Time: {0} from Last Reboot: {1} is {2}, which is {3} than threadhold {4}", now, lastReboot, timespan, canReboot ? "longer" : "shorter", minInterval);
+            
+            Properties.Settings.Default.LastReboot = now;
+            Properties.Settings.Default.Save();
+            logger.Info("Log Reboot Time: {0}", now);
+            
+            return canReboot;
+        }
+
         private void Reboot()
         {
             logger.Info("Reboot");
 
+            if (!CheckRebootInterval())
+            {
+                logger.Error("Reboot Canceled, Now is less than threadhold from last reboot");
+                return;
+            }
+
             try
             {
+                logger.Info("Trigger Reboot");
                 var os = WinOperatingSystem.CreateInstance();
                 var result = os.Reboot();
                 if (result == 0)
@@ -86,7 +109,7 @@ namespace ProvisionDaemon
                     var ipAddress = addresses.First(); // TODO Use a better and reasonable algorithm
                     logger.Info("Use Ip: {0}", ipAddress);
 
-                    desiredComputerName = 
+                    desiredComputerName =
                         Properties.Settings.Default.ComputerNamePrefix +
                         ipAddress.ToString().Replace(".", Properties.Settings.Default.ComputerNameSeperator);
                     logger.Debug("Desired Computer Name: {0}", desiredComputerName);
@@ -98,9 +121,13 @@ namespace ProvisionDaemon
 
         private bool CheckComputerName()
         {
-            logger.Info("ComputerName: {0}", Environment.MachineName);
-            logger.Debug("DesiredComputerName: {0}", DesiredComputerName);
-            var result = Environment.MachineName == DesiredComputerName;
+            //var currentName = Environment.MachineName;
+            var currentName = Dns.GetHostName(); // use Dns.GetHostName to solve the truncated problem.
+            var desireName = DesiredComputerName; // local copy makes log more clear.
+
+            logger.Info("ComputerName: {0}", currentName);
+            logger.Debug("DesiredComputerName: {0}", desireName);
+            var result = currentName == desireName;
             logger.Info(() => result ? "Computer-Name is valid" : "Computer need to be renamed");
 
             return result;
