@@ -1,2 +1,2 @@
-﻿C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe ProvisionDaemon.exe
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe ProvisionDaemon.exe
 pause
